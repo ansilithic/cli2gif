@@ -39,6 +39,9 @@ struct CLI2GIF: ParsableCommand {
     @Option(name: .long, help: "Terminal rows")
     var rows: Int = 24
 
+    @Flag(name: .long, help: "Show styled terminal prompt (user@mac ~ %%)")
+    var prompt: Bool = false
+
     @Flag(name: .long, help: "Skip window chrome")
     var noChrome: Bool = false
 
@@ -86,17 +89,24 @@ struct CLI2GIF: ParsableCommand {
         )
 
         var frames: [GIFFrame] = []
-        let promptPrefix = "$ "
-        let fullPromptLine = promptPrefix + command
         let typingDelay = Double(typingSpeed) / 1000.0
         let frameInterval = 1.0 / Double(fps)
 
+        // Build prompt string
+        let promptANSI: String
+        if prompt {
+            // Styled prompt matching cli2png: user@mac (gray) ~ (bold cyan) % (gray)
+            promptANSI = "\u{1B}[38;2;107;114;128muser@mac\u{1B}[1;38;2;86;182;194m ~ \u{1B}[22;38;2;107;114;128m% \u{1B}[0m"
+        } else {
+            promptANSI = "$ "
+        }
+
         // Phase 1: Typing animation
-        for i in 0...fullPromptLine.count {
-            let typed = String(fullPromptLine.prefix(i))
-            // Reset state for each frame — build up from scratch
+        // Prompt appears instantly, command typed character by character
+        for i in 0...command.count {
+            let typed = String(command.prefix(i))
             let frameState = TerminalState(cols: cols, rows: rows)
-            frameState.write(typed)
+            frameState.write(promptANSI + typed)
             let snap = frameState.snapshot()
 
             if let image = FrameRenderer.render(
@@ -118,7 +128,7 @@ struct CLI2GIF: ParsableCommand {
         // Phase 2: Command execution with PTY
         let state = TerminalState(cols: cols, rows: rows)
         // Pre-fill the prompt line so it's visible during output
-        state.write(promptPrefix + command + "\n")
+        state.write(promptANSI + command + "\n")
 
         let recorder = PTYRecorder(command: command, cols: cols, rows: rows, timeout: timeout)
         let semaphore = DispatchSemaphore(value: 0)
