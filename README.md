@@ -6,6 +6,8 @@
 
 Record a terminal command as an animated GIF. Captures a typing animation followed by live command output with full ANSI color and styling support.
 
+![cli2gif](assets/hero.gif)
+
 ## How it works
 
 cli2gif records in three phases:
