@@ -4,7 +4,7 @@ enum Theme {
     static let foreground = "#2FFF12"
     static let titleBar = "#21252B"
 
-    // Traffic lights (from CLICore)
+    // Traffic lights
     static let trafficRed = "#E06C75"
     static let trafficYellow = "#E5C07B"
     static let trafficGreen = "#98C379"
