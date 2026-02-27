@@ -12,7 +12,8 @@ private final class AtomicFlag: Sendable {
 struct CLI2GIF: ParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "cli2gif",
-        abstract: "Record a terminal command as an animated GIF"
+        abstract: "Record a terminal command as an animated GIF",
+        version: "1.0.0"
     )
 
     @Argument(help: "Shell command to record")
