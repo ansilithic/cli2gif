@@ -20,7 +20,11 @@ The tool includes a full terminal emulator — cursor movement, line wrapping, s
 
 ## Install
 
-Requires Xcode and macOS 14+.
+```sh
+brew install ansilithic/tap/cli2gif
+```
+
+Or build from source (requires Xcode and macOS 14+):
 
 ```sh
 make build && make install
